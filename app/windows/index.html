@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>Chand</title>
+    <link rel="stylesheet" href="libs/bulma.css">
+    <style>
+        body {
+            padding-top: 1em;
+        }
+        html, body {
+            overflow: hidden !important;
+        }
+        #latestPrices tr td {
+            text-align: right;
+            cursor: pointer
+        }
+        #chartWrapper {
+            padding: 3em;
+            padding-top: 0;
+        }
+    </style>
+</head>
+<body class="is-unselectable">
+    <div>
+        <div>
+            <table class="table is-fullwidth is-hoverable is-striped rtl">
+                <tbody id="latestPrices"></tbody>
+            </table>
+        </div>
+        <div id="chartWrapper">
+            <canvas id="priceChart" width="700px" height="320px"></canvas>
+        </div>
+    </div>
+    <script>require('./index.js')</script>
+</body>
+</html>

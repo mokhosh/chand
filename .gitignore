@@ -1,0 +1,11 @@
+.idea
+logs
+*.log
+npm-debug.log*
+pids
+*.pid
+*.seed
+*.pid.lock
+build/Release
+node_modules/
+*.tgz

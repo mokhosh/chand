@@ -1,0 +1,16 @@
+{
+  "name": "chand",
+  "version": "0.0.0",
+  "description": "a simple app to track gold/currency prices in iran",
+  "main": "app/main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "MoKhosh",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "electron": "^1.8.4",
+    "nedb": "^1.8.0"
+  }
+}
