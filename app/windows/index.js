@@ -1,6 +1,7 @@
 require('./libs/chart')
 const { ipcRenderer } = require('electron')
 const names = require('../constants').coinNames
+let ctx, chart
 
 ipcRenderer.on('prices:latest', (e, data) => {
     let tbody = document.getElementById('latestPrices')
@@ -15,8 +16,13 @@ ipcRenderer.on('prices:latest', (e, data) => {
 
 ipcRenderer.on('prices:chart', (e, prices) => {
     let { labels, data } = extractData(prices)
-    let ctx = document.getElementById("priceChart").getContext('2d');
-    new Chart(ctx, {
+    if (! ctx) {
+        ctx = document.getElementById("priceChart").getContext('2d')
+    }
+    if (chart) {
+        chart.destroy()
+    }
+    chart = new Chart(ctx, {
         type: 'line',
         data: {
             labels,
