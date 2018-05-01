@@ -1,8 +1,9 @@
 {
   "name": "chand",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "a simple app to track gold/currency prices in iran",
   "main": "app/main.js",
+  "repository": "https://github.com/mokhosh/chand",
   "scripts": {
     "start": "electron ."
   },
