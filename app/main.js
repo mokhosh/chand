@@ -8,8 +8,14 @@ let constants = require('./constants')
 let win, tray
 let db = new Datastore({ filename: path.join(__dirname,'db/prices.db'), autoload: true })
 
-setInterval(getCurrentPrices, 1000 * 60 * 60 * 24)
+let priceChecker = setInterval(getCurrentPrices, 1000 * 60 * 60 * 24)
 app.on('ready', bootstrap)
+app.on('window-all-closed', function () {
+    priceChecker.unref
+    priceChecker = null
+    app.quit()
+    app = null
+})
 ipcMain.on('req:stat', (e, key) => {
     db.find({}, makeProjection(key)).sort({date: 1}).exec((error, prices) => {
         win.webContents.send('prices:chart', {prices, key})
@@ -44,17 +50,18 @@ function createWindow()
     win.on('closed', () => {
         win = null
     })
-    win.on('minimize',function(event){
-        event.preventDefault()
-        win.hide()
-    })
-    win.on('close', function (event) {
-        if (! app.isQuitting) {
-            event.preventDefault()
-            win.hide()
-        }
-        return false
-    })
+    // not working in ubuntu
+    // win.on('close', function (event) {
+    //     if (! app.isQuitting) {
+    //         event.preventDefault()
+    //         win.hide()
+    //     }
+    //     return false
+    // })
+    // win.on('minimize',function(event){
+    //     event.preventDefault()
+    //     win.hide()
+    // })
 }
 
 function createTray()
@@ -136,4 +143,15 @@ function makeProjection(key)
     }
     projection['prices.' + key] = 1
     return projection
+}
+
+function deleteDuplicates()
+{
+    db.find({}, { date: 1, _id: 0, 'prices.rob': 1 }).sort({ date: 1 }).exec((error, prices) => {
+        for (let i = 1; i < prices.length; i += 1) {
+            if (prices[i].date.getDay() === prices[i - 1].date.getDay() && prices[i].prices.rob === prices[i - 1].prices.rob) {
+                db.remove({ date: prices[i].date })
+            }
+        }
+    })
 }
