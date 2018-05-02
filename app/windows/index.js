@@ -30,20 +30,20 @@ ipcRenderer.on('prices:chart', (e, prices) => {
                 {
                     label: 'TODO',
                     data,
-                    backgroundColor: ['rgba(255, 99, 132, 0.2)'],
-                    borderColor: ['rgba(255,99,132,1)'],
+                    backgroundColor: ['rgba(99,242,151,0.2)'],
+                    borderColor: ['rgba(99,242,151,1)'],
                     borderWidth: 1
                 }
-            ],
-            options: {
-                responsive: false,
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }]
-                }
+            ]
+        },
+        options: {
+            responsive: false,
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        stepSize: 500000
+                    }
+                }]
             }
         }
     })
