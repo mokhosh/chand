@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.18.0",
-    "electron": "^1.8.4",
+    "electron": "^2.0.0",
     "nedb": "^1.8.0"
   }
 }
