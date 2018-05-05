@@ -15,7 +15,7 @@ ipcRenderer.on('prices:latest', (e, data) => {
 })
 
 ipcRenderer.on('prices:chart', (e, prices) => {
-    let { labels, data } = extractData(prices)
+    let { labels, data, name } = extractData(prices)
     if (! ctx) {
         ctx = document.getElementById("priceChart").getContext('2d')
     }
@@ -28,7 +28,7 @@ ipcRenderer.on('prices:chart', (e, prices) => {
             labels,
             datasets: [
                 {
-                    label: 'TODO',
+                    label: name,
                     data,
                     backgroundColor: ['rgba(99,242,151,0.2)'],
                     borderColor: ['rgba(99,242,151,1)'],
@@ -58,7 +58,7 @@ function extractData(input)
         data[data.length] = currencyToNumber(item.prices[input.key])
     }
 
-    return { labels, data }
+    return { labels, data, name: names[input.key] }
 }
 
 function formatDate(string)
