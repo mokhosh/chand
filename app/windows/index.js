@@ -1,6 +1,6 @@
 require('./libs/chart')
 const { ipcRenderer } = require('electron')
-const names = require('../constants').coinNames
+const names = require('../constants').names
 let ctx, chart
 
 ipcRenderer.on('prices:latest', (e, data) => {
@@ -41,7 +41,7 @@ ipcRenderer.on('prices:chart', (e, prices) => {
             scales: {
                 yAxes: [{
                     ticks: {
-                        stepSize: 500000
+                        stepSize: Math.max.apply(null, data) > 1000000 ? 500000 : 1000
                     }
                 }]
             }
