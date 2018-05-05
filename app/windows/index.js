@@ -1,21 +1,24 @@
 require('./libs/chart')
 const { ipcRenderer } = require('electron')
 const names = require('../constants').names
+const tools = require('./tools')
 let ctx, chart
 
 ipcRenderer.on('prices:latest', (e, data) => {
     let tbody = document.getElementById('latestPrices')
-    for (coin in data.prices) {
-        let key = coin.toString()
+    let sortedPrices = tools.sortedKeys(data.prices)
+    for (coin in sortedPrices) {
+        let key = sortedPrices[coin].toString()
         let row = document.createElement('tr')
         tbody.appendChild(row)
-        row.innerHTML = `<td>${names[coin]}</td><td>${data.prices[coin]}</td>`
+        row.innerHTML = `<td>${names[key]}</td><td>${data.prices[key]}</td>`
         row.addEventListener('click', () => ipcRenderer.send('req:stat', key))
     }
 })
 
 ipcRenderer.on('prices:chart', (e, prices) => {
-    let { labels, data, name } = extractData(prices)
+    let { labels, data, name } = tools.extractData(prices)
+    let { solidColor, transparentColor } = tools.randomColor()
     if (! ctx) {
         ctx = document.getElementById("priceChart").getContext('2d')
     }
@@ -30,8 +33,8 @@ ipcRenderer.on('prices:chart', (e, prices) => {
                 {
                     label: name,
                     data,
-                    backgroundColor: ['rgba(99,242,151,0.2)'],
-                    borderColor: ['rgba(99,242,151,1)'],
+                    backgroundColor: [transparentColor],
+                    borderColor: [solidColor],
                     borderWidth: 1
                 }
             ]
@@ -48,25 +51,3 @@ ipcRenderer.on('prices:chart', (e, prices) => {
         }
     })
 })
-
-function extractData(input)
-{
-    let labels =[], data = []
-
-    for (item of input.prices) {
-        labels[labels.length] = formatDate(item.date)
-        data[data.length] = currencyToNumber(item.prices[input.key])
-    }
-
-    return { labels, data, name: names[input.key] }
-}
-
-function formatDate(string)
-{
-    return new Date(string).toLocaleDateString("fa-IR", {day: 'numeric', month: 'short'})
-}
-
-function currencyToNumber(string)
-{
-    return Number(string.replace(/,/g,''))
-}
